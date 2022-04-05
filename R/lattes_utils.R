@@ -5,19 +5,21 @@ ano_inicial <- function(ultimos_anos) {
 #' @export
 read_qualis <- function() {
   utils::read.csv(system.file(
-    "lattes/qualis_2010_2016.csv", package = "ifpe.apps"
+    "lattes/qualis_2010_2016.csv",
+    package = "ifpe.apps"
   ))
 }
 
 #' @export
 read_sjr <- function() {
   utils::read.csv(system.file(
-    "lattes/scimagojr_1999_2019.csv", package = "ifpe.apps"
+    "lattes/scimagojr_1999_2019.csv",
+    package = "ifpe.apps"
   )) %>%
     dplyr::mutate(
       SJR = as.numeric(sub(",", ".", SJR)),
       ISSN = stringr::str_trim(ISSN)
-  )
+    )
 }
 
 #' @export
@@ -46,7 +48,7 @@ ler_orientacao <- function(x) {
   ) %>%
     dplyr::mutate(orientacao = dplyr::if_else(
       orientacao == "ORIENTADOR_PRINCIPAL", "ORIENTADOR", "COORIENTADOR"
-  ))
+    ))
 }
 
 atributo_existe <- function(x, attr) {
@@ -60,4 +62,3 @@ verificar_atributo_titulo <- function(x) {
     "TITULO-DO-TRABALHO"
   }
 }
-

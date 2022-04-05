@@ -3,7 +3,6 @@ lattes_orientacoes <- function(curriculo,
                                pontuacao = NULL,
                                maximo = NULL,
                                ultimos_anos = 5) {
-
   ano_inicial <- ano_inicial(ultimos_anos)
   pontuacao_orientacoes <- criar_pontuacao_orientacoes(pontuacao)
 
@@ -14,22 +13,20 @@ lattes_orientacoes <- function(curriculo,
   ) %>%
     filtrar_orientacoes(ano_inicial)
 
-    score_orientacoes(orientacoes$deferidos, pontuacao_orientacoes)
-
-
-
+  score_orientacoes(orientacoes$deferidos, pontuacao_orientacoes)
 }
 
 ler_orientacao_doutorado <- function(x) {
-
-  doutorado_completo <- extrair_xml_dados_basicos_e_detalhes(x,
+  doutorado_completo <- extrair_xml_dados_basicos_e_detalhes(
+    x,
     "//ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO/DADOS-BASICOS-DE-ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO",
     "//ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO/DETALHAMENTO-DE-ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO"
   ) %>%
     ler_orientacao() %>%
     dplyr::mutate(natureza = paste0("DOUTORADO_COMPLETO_", orientacao))
 
-  doutorado_em_andamento <- extrair_xml_dados_basicos_e_detalhes(x,
+  doutorado_em_andamento <- extrair_xml_dados_basicos_e_detalhes(
+    x,
     "//ORIENTACAO-EM-ANDAMENTO-DE-DOUTORADO/DADOS-BASICOS-DA-ORIENTACAO-EM-ANDAMENTO-DE-DOUTORADO",
     "//ORIENTACAO-EM-ANDAMENTO-DE-DOUTORADO/DETALHAMENTO-DA-ORIENTACAO-EM-ANDAMENTO-DE-DOUTORADO"
   ) %>%
@@ -40,15 +37,16 @@ ler_orientacao_doutorado <- function(x) {
 }
 
 ler_orientacao_mestrado <- function(x) {
-
-  mestrado_completo <- extrair_xml_dados_basicos_e_detalhes(x,
+  mestrado_completo <- extrair_xml_dados_basicos_e_detalhes(
+    x,
     "//ORIENTACOES-CONCLUIDAS-PARA-MESTRADO/DADOS-BASICOS-DE-ORIENTACOES-CONCLUIDAS-PARA-MESTRADO",
     "//ORIENTACOES-CONCLUIDAS-PARA-MESTRADO/DETALHAMENTO-DE-ORIENTACOES-CONCLUIDAS-PARA-MESTRADO"
   ) %>%
     ler_orientacao() %>%
     dplyr::mutate(natureza = paste0("MESTRADO_COMPLETO_", orientacao))
 
-  mestrado_em_andamento <- extrair_xml_dados_basicos_e_detalhes(x,
+  mestrado_em_andamento <- extrair_xml_dados_basicos_e_detalhes(
+    x,
     "//ORIENTACAO-EM-ANDAMENTO-DE-MESTRADO/DADOS-BASICOS-DA-ORIENTACAO-EM-ANDAMENTO-DE-MESTRADO",
     "//ORIENTACAO-EM-ANDAMENTO-DE-MESTRADO/DETALHAMENTO-DA-ORIENTACAO-EM-ANDAMENTO-DE-MESTRADO"
   ) %>%
@@ -60,7 +58,8 @@ ler_orientacao_mestrado <- function(x) {
 
 
 ler_outras_orientacoes <- function(x) {
-  orientacoes_xml <-xml2::xml_find_all(x,
+  orientacoes_xml <- xml2::xml_find_all(
+    x,
     "//OUTRAS-ORIENTACOES-CONCLUIDAS/DADOS-BASICOS-DE-OUTRAS-ORIENTACOES-CONCLUIDAS"
   )
 
@@ -71,16 +70,17 @@ ler_outras_orientacoes <- function(x) {
   ) %>%
     dplyr::mutate(
       natureza = dplyr::if_else(natureza == "INICIACAO_CIENTIFICA",
-        "INICIACAO_CIENTIFICA_COMPLETA", natureza),
+        "INICIACAO_CIENTIFICA_COMPLETA", natureza
+      ),
       orientacao = "ORIENTADOR" # existe um bug no lattes todo mundo fica como co-orientador
-      ) %>%
+    ) %>%
     dplyr::mutate(natureza = paste0(
       natureza, "_", orientacao
     ))
 }
 
 criar_pontuacao_orientacoes <- function(pontuacao) {
-  if(is.null(pontuacao)) {
+  if (is.null(pontuacao)) {
     pontuacao_orientacoes <- data.frame(
       item = c(
         "DOUTORADO_COMPLETO_ORIENTADOR", "DOUTORADO_EM_ANDAMENTO_ORIENTADOR",

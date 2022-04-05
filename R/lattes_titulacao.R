@@ -1,12 +1,12 @@
 #' @importFrom dplyr %>%
 #' @export
 lattes_titulacao <- function(x, pontuacao = NULL) {
-
   if (is.null(pontuacao)) {
     titulacao <- data.frame(
       item = c("GRADUACAO", "ESPECIALIZACAO", "MESTRADO", "DOUTORADO"),
       pontuacao = c(2, 4, 7, 10)
-    )} else {
+    )
+  } else {
     titulacao <- pontuacao
   }
 
@@ -24,5 +24,3 @@ lattes_titulacao <- function(x, pontuacao = NULL) {
     dplyr::mutate(total = pontuacao * quantidade) %>%
     dplyr::select(item, quantidade, quantidade_max, pontuacao, total)
 }
-
-
