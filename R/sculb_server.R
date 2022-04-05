@@ -50,10 +50,9 @@ function(input, output, session) {
             )
           )
         })
+
+        "Currículos avaliados com sucesso!!!"
       }
-
-
-      # "download realizado com sucesso!!!"
     })
   }
 }
