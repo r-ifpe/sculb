@@ -24,6 +24,3 @@ sculb_lattes_input <- function() {
     accept = c("zip")
   )
 }
-
-
-

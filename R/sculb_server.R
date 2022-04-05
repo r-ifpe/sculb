@@ -1,7 +1,6 @@
 #' @export
 sculb_server <- function() {
-
-function(input, output, session) {
+  function(input, output, session) {
     output$lattes_output <- renderText({
       if (is.null(input$lattes)) {
         "Por favor insira os curriculos lattes"

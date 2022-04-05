@@ -3,7 +3,6 @@ lattes_bibliografia <- function(curriculo,
                                 pontuacao = NULL,
                                 maximo = NULL,
                                 ultimos_anos = 5) {
-
   ano_inicial <- ano_inicial(ultimos_anos)
   pontuacao_bibliografia <- criar_pontuacao_bibliografia(pontuacao)
 
@@ -27,7 +26,7 @@ lattes_bibliografia <- function(curriculo,
 }
 
 criar_pontuacao_bibliografia <- function(pontuacao) {
-  if(is.null(pontuacao)) {
+  if (is.null(pontuacao)) {
     pontuacao_bibliografia <- data.frame(
       item = c(
         "A1", "A2", "B1", "B2", "B3", "B4", "B5", "C", "SEM_QUALIS",
@@ -39,7 +38,7 @@ criar_pontuacao_bibliografia <- function(pontuacao) {
         5, 4, 2.5,
         1.5, 0.5
       )
-  )
+    )
   } else {
     pontuacao_bibliografia <- pontuacao
   }
@@ -85,7 +84,7 @@ ler_periodicos <- function(x) {
     issn = xml2::xml_attr(periodicos_detalhes, "ISSN")
   )
 
- classificar_qualis(periodicos_tabela)
+  classificar_qualis(periodicos_tabela)
 }
 
 classificar_qualis <- function(periodicos) {
@@ -123,8 +122,9 @@ ler_livro <- function(x) {
     natureza = xml2::xml_attr(livro, "TIPO"),
     ano = xml2::xml_attr(livro, "ANO")
   ) %>%
-  dplyr::mutate(natureza = dplyr::if_else(
-      natureza == "LIVRO_ORGANIZADO_OU_EDICAO", "LIVRO_ORGANIZADO", natureza))
+    dplyr::mutate(natureza = dplyr::if_else(
+      natureza == "LIVRO_ORGANIZADO_OU_EDICAO", "LIVRO_ORGANIZADO", natureza
+    ))
 
   xpath <- "//CAPITULO-DE-LIVRO-PUBLICADO/DADOS-BASICOS-DO-CAPITULO"
   capitulo <- xml2::xml_find_all(x, xpath)
@@ -136,13 +136,12 @@ ler_livro <- function(x) {
     natureza = xml2::xml_attr(capitulo, "TIPO"),
     ano = xml2::xml_attr(capitulo, "ANO")
   ) %>%
-  dplyr::mutate(natureza = "LIVRO_CAPITULO")
+    dplyr::mutate(natureza = "LIVRO_CAPITULO")
 
   rbind(livro, capitulo)
 }
 
 filtrar_livros <- function(x, ano_inicial) {
-
   livro_deferido <- dplyr::filter(x, ano >= ano_inicial)
   livro_indeferido <- dplyr::filter(x, ano < ano_inicial)
   capitulo_deferido <- dplyr::filter(x, ano >= ano_inicial)
@@ -156,15 +155,16 @@ filtrar_livros <- function(x, ano_inicial) {
 
 score_bibliografia <- function(periodicos, congressos,
                                livros, pontuacao_bibliografia) {
-
   periodicos_deferidos <- periodicos$deferidos %>%
     dplyr::group_by(estrato) %>%
     dplyr::tally(name = "quantidade") %>%
     dplyr::mutate(quantidade_max = "-") %>%
     dplyr::left_join(pontuacao_bibliografia, by = c("estrato" = "item")) %>%
     dplyr::rename(item = estrato) %>%
-    dplyr::mutate(item = paste0("PERIODICO_", item),
-                  total = quantidade * pontuacao)
+    dplyr::mutate(
+      item = paste0("PERIODICO_", item),
+      total = quantidade * pontuacao
+    )
 
   congressos_deferidos <- congressos$deferidos %>%
     dplyr::group_by(natureza) %>%
@@ -191,4 +191,3 @@ score_bibliografia <- function(periodicos, congressos,
     livros_deferidos
   )
 }
-
