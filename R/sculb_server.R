@@ -13,7 +13,8 @@ function(input, output, session) {
             score_detalhado <- rbind(
               lattes_titulacao(read_lattes_xml(e)),
               lattes_bibliografia(read_lattes_xml(e)),
-              lattes_orientacoes(read_lattes_xml(e))
+              lattes_orientacoes(read_lattes_xml(e)),
+              lattes_producao_tecnica(read_lattes_xml(e))
             )
 
             score <- data.frame(

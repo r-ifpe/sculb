@@ -15,9 +15,6 @@ lattes_orientacoes <- function(curriculo,
     filtrar_orientacoes(ano_inicial)
 
     score_orientacoes(orientacoes$deferidos, pontuacao_orientacoes)
-
-
-
 }
 
 ler_orientacao_doutorado <- function(x) {
