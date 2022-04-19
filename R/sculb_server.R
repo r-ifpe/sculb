@@ -14,12 +14,13 @@ function(input, output, session) {
               lattes_titulacao(read_lattes_xml(e)),
               lattes_bibliografia(read_lattes_xml(e)),
               lattes_orientacoes(read_lattes_xml(e)),
-              lattes_producao_tecnica(read_lattes_xml(e))
+              lattes_producao_tecnica(read_lattes_xml(e)),
+              lattes_banca(read_lattes_xml(e))
             )
 
             score <- data.frame(
               nome = lattes_nome(read_lattes_xml(e)),
-              pontuacao_total = sum(score_detalhado$total)
+              pontuacao_total = sum(score_detalhado$total, na.rm = TRUE)
             )
 
             list(
