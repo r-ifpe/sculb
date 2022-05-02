@@ -70,19 +70,36 @@ ler_banca_stricto_sensu_mestrado <- function(x) {
 }
 
 ler_banca_doutorado <- function(x) {
-  x <- xml2::xml_find_all(x,
+  banca_doutorado <- xml2::xml_find_all(x,
     "//PARTICIPACAO-EM-BANCA-DE-DOUTORADO/DADOS-BASICOS-DA-PARTICIPACAO-EM-BANCA-DE-DOUTORADO"
   )
 
-  if (length(x) == 0) {
-    data.frame()
+  if (length(banca_doutorado) == 0) {
+    doutorados <- data.frame()
   } else {
-    data.frame(
+    doutorados <- data.frame(
       item = "BANCA_POS_STRICTO_SENSU",
-      nome = xml2::xml_attr(x, "TITULO"),
-      ano = xml2::xml_attr(x, "ANO")
+      nome = xml2::xml_attr(banca_doutorado, "TITULO"),
+      ano = xml2::xml_attr(banca_doutorado, "ANO")
     )
   }
+
+  banca_qualificacao <- xml2::xml_find_all(x,
+    "//PARTICIPACAO-EM-BANCA-DE-EXAME-QUALIFICACAO/DADOS-BASICOS-DA-PARTICIPACAO-EM-BANCA-DE-EXAME-QUALIFICACAO"
+  )
+
+  if (length(banca_qualificacao) == 0) {
+    qualificacoes <- data.frame()
+  } else {
+    qualificacoes <-   data.frame(
+      item = "BANCA_POS_STRICTO_SENSU",
+      nome = xml2::xml_attr(banca_qualificacao, "TITULO"),
+      ano = xml2::xml_attr(banca_qualificacao, "ANO")
+    )
+  }
+
+  rbind(doutorados, qualificacoes)
+
 }
 
 #' @importFrom dplyr %>%

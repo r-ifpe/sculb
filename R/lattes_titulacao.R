@@ -22,7 +22,8 @@ lattes_titulacao <- function(x, pontuacao = NULL) {
 
   titulacao[titulacao_existe, ] %>%
     dplyr::mutate(total = pontuacao * quantidade) %>%
-    dplyr::select(item, quantidade, quantidade_max, pontuacao, total)
+    dplyr::select(item, quantidade, quantidade_max, pontuacao, total) %>%
+    dplyr::slice_tail()
 }
 
 
