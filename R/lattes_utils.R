@@ -5,14 +5,14 @@ ano_inicial <- function(ultimos_anos) {
 #' @export
 read_qualis <- function() {
   utils::read.csv(system.file(
-    "lattes/qualis_2010_2016.csv", package = "ifpe.apps"
+    "lattes/qualis_2010_2016.csv", package = "sculb"
   ))
 }
 
 #' @export
 read_sjr <- function() {
   utils::read.csv(system.file(
-    "lattes/scimagojr_1999_2019.csv", package = "ifpe.apps"
+    "lattes/scimagojr_1999_2019.csv", package = "sculb"
   )) %>%
     dplyr::mutate(
       SJR = as.numeric(sub(",", ".", SJR)),
@@ -61,3 +61,29 @@ verificar_atributo_titulo <- function(x) {
   }
 }
 
+filtrar_deferidos_indeferidos <- function(x, ano_inicial) {
+  list(
+    deferidos = dplyr::filter(x, ano >= ano_inicial),
+    indeferidos = dplyr::filter(x, ano < ano_inicial)
+  )
+}
+
+#' @importFrom dplyr %>%
+calcular_score <- function(deferidos, pontuacao) {
+  deferidos %>%
+    dplyr::group_by(item) %>%
+    dplyr::tally(name = "quantidade") %>%
+    dplyr::left_join(pontuacao, by = "item") %>%
+    dplyr::mutate(total = dplyr::if_else(
+      quantidade > quantidade_max, quantidade_max * pontuacao, quantidade * pontuacao
+    )) %>%
+    dplyr::select(
+      item, quantidade, quantidade_max, pontuacao, total
+    )
+}
+
+#' @importFrom dplyr %>%
+extrair_xml_attr_curriculo <- function(x, area, atributo) {
+  xml2::xml_find_all(x, area) %>%
+    xml2::xml_attr(atributo)
+}
