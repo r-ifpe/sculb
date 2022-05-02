@@ -143,14 +143,12 @@ ler_livro <- function(x) {
 
 filtrar_livros <- function(x, ano_inicial) {
 
-  livro_deferido <- dplyr::filter(x, ano >= ano_inicial)
-  livro_indeferido <- dplyr::filter(x, ano < ano_inicial)
-  capitulo_deferido <- dplyr::filter(x, ano >= ano_inicial)
-  capitulo_indeferido <- dplyr::filter(x, ano < ano_inicial)
+  deferidos <- dplyr::filter(x, ano >= ano_inicial)
+  indeferidos <- dplyr::filter(x, ano < ano_inicial)
 
   list(
-    deferidos = rbind(livro_deferido, capitulo_deferido),
-    indeferidos = rbind(livro_indeferido, capitulo_indeferido)
+    deferidos = deferidos,
+    indeferidos = indeferidos
   )
 }
 
